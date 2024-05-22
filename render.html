@@ -1,4 +1,4 @@
-<html lang="en">
+<!-- <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
     <title>Your Puzzle Here!</title>
@@ -7,7 +7,14 @@
     src='./js/epilog.js'></script>
     <script type='text/javascript'
     src='./js/worksheets.js'></script>
-</head>
+</head> -->
+
+<html><!--=======================================================================--><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>Your Puzzle Here!</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <script type="text/javascript" src="./js/epilog.js"></script>
+    <script type="text/javascript" src="./js/worksheets.js"></script>
+  </head>
 
 <!--=======================================================================-->
 
@@ -31,55 +38,56 @@
       <tbody>
           <tr>
               <th>First Row</th>
-              <td><select class="cell-select" id="cell(1,1)" onchange="modselector(this)">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
+              <td><select class="cell-select" id="cell(1,1)" onchange="modselector(this)"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
           </tr>
           <tr>
               <th>Second Row</th>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select" id="cell(2,2)" onchange="modselector(this)">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select" id="cell(2,2)" onchange="modselector(this)"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
           </tr>
           <tr>
               <th>Third Row</th>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
           <tr>
               <th>Fourth Row</th>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
           </tr>
           <tr>
               <th>Fifth Row</th>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
-              <td><select class="cell-select">${getEmojiOptions()}</select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
+              <td><select class="cell-select"></select></td>
           </tr>
       </tbody>
   </table>
-  
+
     <script>
         function getEmojiOptions() {
-            const emojis = ["",
-                '👏', '👍', '🤞', '🤟', '🤝', 
-                '👏🏻', '👍🏻', '🫰🏻', '🤟🏻', '🤝🏻',
-                '👏🏼', '👍🏼', '🫰🏼', '🤟🏼', '🤝🏼', 
-                '👏🏽', '👍🏽', '🫰🏽', '🤟🏽', '🤝🏽',
-                '👏🏾', '👍🏾', '🫰🏾', '🤟🏾', '🤝🏾'
-            ];
+            // const emojis = ["",
+            //     '👏', '👍', '🤞', '🤟', '🤝', 
+            //     '👏🏻', '👍🏻', '🫰🏻', '🤟🏻', '🤝🏻',
+            //     '👏🏼', '👍🏼', '🫰🏼', '🤟🏼', '🤝🏼', 
+            //     '👏🏽', '👍🏽', '🫰🏽', '🤟🏽', '🤝🏽',
+            //     '👏🏾', '👍🏾', '🫰🏾', '🤟🏾', '🤝🏾'
+            // ];
+            const emojis = ["","1","2","3","4","5"]
             return (emojis.map(emoji => `<option>${emoji}</option>`))
                 .join('');
         }
@@ -89,7 +97,8 @@
         });
     </script>
 
-<textarea class="epilog-textarea" id="lambda" type="text/hrf" style="display:none">
+
+<dataset id="lambda" type="text/hrf" style="display:none">
     puzzle_size(5,5)
     init_puzzle
     
@@ -110,24 +119,22 @@
     clue_type(is_to_left_of)
     clue_type(is_to_right_of)
     clue_type(is_to_either_side_of) 
-</textarea>
+
+    iscell(cell(1,1))
+    iscell(cell(2,2))
+</dataset>
 
 <!--=======================================================================-->
 
-
-<textarea class="epilog-textarea" id="library" type="text/hrf" style="display:none">
-    iscell(cell(1,1))
-    iscell(cell(2,2))
-    
-    
+    <ruleset id="library" type="text/hrf" style="display:none">
     <!-- goal -->
     select(cell(R,C), V):: value(cell(R,C),V)
     select(cell(R,C), V):: value(cell(2,2),V)
     select(cell(R,C), V):: value(cell(R,C),V1) ==> ~value(cell(R,C),V1)
 
-
-</textarea>
+    </ruleset>
 <!--=======================================================================-->
+
 </center>
 
 </body>
