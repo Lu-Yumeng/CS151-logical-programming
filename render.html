@@ -9,7 +9,9 @@
     src='./js/worksheets.js'></script>
 </head> -->
 
-<html><!--=======================================================================--><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<html><!--=======================================================================--><head>
+    <meta http-equiv="Content-Type" content="text/html">
+    <meta charset="UTF-8">
     <title>Your Puzzle Here!</title>
     <link rel="stylesheet" href="./css/main.css">
     <script type="text/javascript" src="./js/epilog.js"></script>
@@ -24,7 +26,7 @@
         <!--=======================================================================-->
         
     <h1>Your Puzzle Here!</h1>
-    <table>
+    <table id="puzzle_grid">
       <thead>
           <tr>
               <th></th>
@@ -77,8 +79,15 @@
           </tr>
       </tbody>
   </table>
+  <button class="btn btn-primary" onclick="modbutton(this);" id="verify_button" widget="button">Verify Your Solution!</button>
+<div class="hidden-message-win" id="win_message">
+    Congratulations! You WIN the game!
+</div>
+<div class="hidden-message-lose" id="lose_message">
+    Sorry! You LOSE the game!
+</div>
 
-    <script>
+<script>
         function getEmojiOptions() {
             // const emojis = ["",
             //     '👏', '👍', '🤞', '🤟', '🤝', 
@@ -87,8 +96,15 @@
             //     '👏🏽', '👍🏽', '🫰🏽', '🤟🏽', '🤝🏽',
             //     '👏🏾', '👍🏾', '🫰🏾', '🤟🏾', '🤝🏾'
             // ];
-            const emojis = ["","1","2","3","4","5"]
-            return (emojis.map(emoji => `<option>${emoji}</option>`))
+            const emojis = ["",
+                '1A', '1B', '1C', '1D', '1E', 
+                '2A', '2B', '2C', '2D', '2E', 
+                '3A', '3B', '3C', '3D', '3E', 
+                '4A', '4B', '4C', '4D', '4E', 
+                '5A', '5B', '5C', '5D', '5E'
+            ];
+           
+            return (emojis.map(emoji => `<option value=${emoji}>${emoji}</option>`))
                 .join('');
         }
 
@@ -127,10 +143,27 @@
 <!--=======================================================================-->
 
     <ruleset id="library" type="text/hrf" style="display:none">
-    <!-- goal -->
-    select(cell(R,C), V):: value(cell(R,C),V)
-    select(cell(R,C), V):: value(cell(2,2),V)
-    select(cell(R,C), V):: value(cell(R,C),V1) ==> ~value(cell(R,C),V1)
+    select(cell(R, C), V)::value(cell(R, C), V)
+    select(cell(R, C), V):: value(cell(R, C), V1) ==> ~value(cell(R, C), V1)
+
+
+
+    <!-- Reltaions -->
+    <!-- on the same Row
+    on the same column 
+    at a specific location either row or column 
+    On the same row: directly to the left / to the right 
+    on the same column: directly on top of/ below
+    clue regarding object: give both color and shape -->
+    
+    <!-- verify solution -->
+    click(verify_button) ::  check() ==> style(win_message, display, block)
+    click(verify_button) ::  check() & ~style(lose_message, display, none) ==> style(lose_message, display, none) & ~style(lose_message, display, block)
+
+    click(verify_button) ::  ~check() ==> style(lose_message, display, block)
+    click(verify_button) ::  ~check() & ~style(win_message, display, none) ==> style(win_message, display, none) & ~style(win_message, display, block)
+
+    check() :- iscell(cell(1,1))
 
     </ruleset>
 <!--=======================================================================-->

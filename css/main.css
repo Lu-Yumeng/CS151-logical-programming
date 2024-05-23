@@ -31,3 +31,17 @@ th, td {
     -moz-appearance: none;
     appearance: none;
 }
+.hidden-message-win {
+    display: none;
+    color: rgb(255, 106, 0);
+    font-size: 2em;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+}
+.hidden-message-lose {
+    display: none;
+    color: rgb(43, 0, 255);
+    font-size: 2em;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+}
