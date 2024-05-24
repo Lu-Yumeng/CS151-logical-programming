@@ -125,22 +125,18 @@
                     { value: "red_circle", display: "🔴" },
                     { value: "green_circle", display: "🟢" },
                     { value: "yellow_circle", display: "🟡" },
-                    { value: "purple_circle", display: "🟣" },
                     { value: "blue_square", display: "🟦" },
                     { value: "red_square", display: "🟥" },
                     { value: "green_square", display: "🟩" },
                     { value: "yellow_square", display: "🟨" },
-                    { value: "purple_square", display: "🟪" },
                     { value: "blue_heart", display: "💙" },
                     { value: "red_heart", display: "❤️" },
                     { value: "green_heart", display: "💚" },
                     { value: "yellow_heart", display: "💛" },
-                    { value: "purple_heart", display: "💜" },
-                    { value: "blue_star", display: "⭐" }, // TODO: change the color
+                    { value: "blue_star", display: "⭐" }, // TODO: change the color using css here
                     { value: "red_star", display: "🌟" },
                     { value: "green_star", display: "🌠" },
                     { value: "yellow_star", display: "🌟" },
-                    { value: "purple_star", display: "🌠" },
                 ];
 
                 return emojis.map(emoji => `<option value="${emoji.value}">${emoji.display}</option>`).join('');
@@ -176,28 +172,34 @@
             iscell(cell(1,1))
             iscell(cell(2,2))
 
+            shape(circle)
+            shape(square)
+            shape(heart)
+            shape(star)
+
+            color(blue)
+            color(red)
+            color(green)
+            color(yellow)
+
             <!-- Map emoji value to shape and color -->
             <!-- emoji(V, S, C): V is value, S is shape, C is color -->
             emoji(blue_circle, circle, blue)
             emoji(red_circle, circle, red)
             emoji(green_circle, circle, green)
             emoji(yellow_circle, circle, yellow)
-            emoji(purple_circle, circle, purple)
             emoji(blue_square, square, blue)
             emoji(red_square, square, red)
             emoji(green_square, square, green)
             emoji(yellow_square, square, yellow)
-            emoji(purple_square, square, purple)
             emoji(blue_heart, heart, blue)
             emoji(red_heart, heart, red)
             emoji(green_heart, heart, green)
             emoji(yellow_heart, heart, yellow)
-            emoji(purple_heart, heart, purple)
             emoji(blue_star, star, blue)
             emoji(red_star, star, red)
             emoji(green_star, star, green)
             emoji(yellow_star, star, yellow)
-            emoji(purple_star, star, purple)
 
         </dataset>
 
@@ -210,11 +212,38 @@
 
             <!-- Reltaions -->
             <!-- on the same Row
-    on the same column 
-    at a specific location either row or column 
-    On the same row: directly to the left / to the right 
-    on the same column: directly on top of/ below
-    clue regarding object: give both color and shape -->
+                on the same column 
+                at a specific location either row or column 
+                On the same row: directly to the left / to the right 
+                on the same column: directly on top of/ below
+                clue regarding object: give both color and shape -->
+
+            <!-- randomly generate a valid grid -->
+
+            valid_row_color([C1, C2, C3, C4]) :-
+                color(C1) & color(C2) & color(C3) & color(C4) & mutex(C1, C2, C3, C4)
+            
+            random_row_color(C) :- evaluate(choose(X, valid_row_color(X)), C)
+
+            valid_grid_shape([S11, S12, S13, S14, S21, S22, S23, S24, S31, S32, S33, S34, S41, S42, S43, S44]) :-
+                shape(S11) & shape(S12) & shape(S13) & shape(S14) & mutex(S11, S12, S13, S14) &
+                shape(S21) & shape(S22) & shape(S23) & shape(S24) & mutex(S21, S22, S23, S24) &
+                mutex(S11, S21) & mutex(S12, S22) & mutex(S13, S23) & mutex(S14, S24) &
+                shape(S31) & shape(S32) & shape(S33) & shape(S34) & mutex(S31, S32, S33, S34) &
+                mutex(S11, S21, S31) & mutex(S12, S22, S32) & mutex(S13, S23, S33) & mutex(S14, S24, S34) &
+                shape(S41) & shape(S42) & shape(S43) & shape(S44) & mutex(S41, S42, S43, S44) &
+                mutex(S11, S21, S31, S41) & mutex(S12, S22, S32, S42) & mutex(S13, S23, S33, S43) & mutex(S14, S24, S34, S44)
+
+            random_grid_shape(S) :- evaluate(choose(X, valid_grid_shape(X)), S)
+
+            random_grid([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) :-
+                random_row_color([C1, C2, C3, C4]) & 
+                random_grid_shape([S11, S12, S13, S14, S21, S22, S23, S24, S31, S32, S33, S34, S41, S42, S43, S44]) &
+                emoji(X11, S11, C1) & emoji(X12, S12, C1) & emoji(X13, S13, C1) & emoji(X14, S14, C1) &
+                emoji(X21, S21, C2) & emoji(X22, S22, C2) & emoji(X23, S23, C2) & emoji(X24, S24, C2) &
+                emoji(X31, S31, C3) & emoji(X32, S32, C3) & emoji(X33, S33, C3) & emoji(X34, S34, C3) &
+                emoji(X41, S41, C4) & emoji(X42, S42, C4) & emoji(X43, S43, C4) & emoji(X44, S44, C4)
+            
 
             <!-- verify solution -->
             click(verify_button) :: check() ==> style(win_message, display, block)
@@ -225,10 +254,27 @@
             click(verify_button) :: ~check() & ~style(win_message, display, none) ==> style(win_message, display, none)
             & ~style(win_message, display, block)
 
-            check() :- iscell(cell(1,1))
+            check() :- value(cell(1,1), blue_circle)
+            
+            <!-- verify if a grid satisfied the basic rule (don't use it for generation because it is not optimized for generation) -->
+            valid_grid([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) :-
+                emoji(X11, S11, C1) & emoji(X12, S12, C1) & emoji(X13, S13, C1) & emoji(X14, S14, C1) &
+                mutex(S11, S12, S13, S14) &
+                emoji(X21, S21, C2) & emoji(X22, S22, C2) & emoji(X23, S23, C2) & emoji(X24, S24, C2) &
+                mutex(S21, S22, S23, S24) & mutex(C1, C2) &
+                emoji(X31, S31, C3) & emoji(X32, S32, C3) & emoji(X33, S33, C3) & emoji(X34, S34, C3) &
+                mutex(S31, S32, S33, S34) & mutex(C1, C2, C3) &
+                emoji(X41, S41, C4) & emoji(X42, S42, C4) & emoji(X43, S43, C4) & emoji(X44, S44, C4) &
+                mutex(S41, S42, S43, S44) & mutex(C1, C2, C3, C4)
 
             <!-- check answer -->
             click(solution_button) :: style(puzzle_grid_ans, display, block)
+
+            <!-- helper functions -->
+            <!-- get_nth(L, N, E) :- get the "N"th element in list "L", store the element in "E" -->
+            <!-- TODO: has bug!!!! -->
+            get_nth(E!_, 0, E)
+            get_nth(_!L, N, E) :- geq(N, 1) & evaluate(minus(N, 1), N1) & get_nth(L, N1, E)
 
         </ruleset>
         <!--=======================================================================-->
