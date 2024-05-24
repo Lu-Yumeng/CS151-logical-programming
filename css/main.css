@@ -45,3 +45,58 @@ th, td {
     text-align: center;
     font-family: 'Courier New', Courier, monospace;
 }
+
+
+/* Common styles for custom shapes */
+.triangle, .star {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+/* Triangle styles */
+.triangle {
+    width: 0;
+    height: 0;
+    border-left: 0.5em solid transparent;
+    border-right: 0.5em solid transparent;
+    border-bottom: 1em solid;
+}
+
+/* Star styles */
+.star {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    background-color: currentColor;
+}
+
+/* Color styles */
+.blue {
+    border-bottom-color: blue;
+    color: blue;
+}
+
+.red {
+    border-bottom-color: red;
+    color: red;
+}
+
+.green {
+    border-bottom-color: green;
+    color: green;
+}
+
+.yellow {
+    border-bottom-color: yellow;
+    color: yellow;
+}
+
+.purple {
+    border-bottom-color: purple;
+    color: purple;
+}
+
+/* Resetting border-bottom for stars */
+.star.blue, .star.red, .star.green, .star.yellow, .star.purple {
+    border-bottom-color: transparent;
+}
