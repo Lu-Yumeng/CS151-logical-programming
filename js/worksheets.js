@@ -121,6 +121,7 @@ function modselector (widget)
   var value = read(widget.value);
   console.log(widget.id, widget.value);
   var action = seq('select',item,value);
+  console.log(value);
   fullreact(action);
   return true}
 
