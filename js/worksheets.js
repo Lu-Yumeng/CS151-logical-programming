@@ -118,9 +118,10 @@ function modstring (widget)
 
 function modselector (widget)
  {var item = read(widget.id);
-  console.log(widget.id);
   var value = read(widget.value);
+  console.log(widget.id, widget.value);
   var action = seq('select',item,value);
+  console.log(value);
   fullreact(action);
   return true}
 

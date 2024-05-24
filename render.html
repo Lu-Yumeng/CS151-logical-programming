@@ -1,14 +1,3 @@
-<!-- <html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-    <title>Your Puzzle Here!</title>
-    <link rel="stylesheet" href="./css/main.css">
-    <script type='text/javascript'
-    src='./js/epilog.js'></script>
-    <script type='text/javascript'
-    src='./js/worksheets.js'></script>
-</head> -->
-
 <html><!--=======================================================================-->
 
 <head>
@@ -69,22 +58,22 @@
             </tbody>
         </table>
     </center>
-        <div>
-            <button class="btn btn-primary" onclick="modbutton(this)" id="verify_button" widget="button">Verify Your
-                Solution!</button>
-        </div>
-        <div>
-            <button class="btn btn-primary" onclick="modbutton(this)" id="solution_button" widget="button">Check One
-                Potential Solution!</button>
-        </div>
+    <div>
+        <button class="btn btn-primary" onclick="modbutton(this)" id="verify_button" widget="button">Verify Your
+            Solution!</button>
+    </div>
+    <div>
+        <button class="btn btn-primary" onclick="modbutton(this)" id="solution_button" widget="button">Check One
+            Potential Solution!</button>
+    </div>
 
-        <div class="hidden-message-win" id="win_message">
-            Congratulations! You WIN the game!
-        </div>
+    <div class="hidden-message-win" id="win_message">
+        Congratulations! You WIN the game!
+    </div>
 
-        <div class="hidden-message-lose" id="lose_message">
-            Sorry! You LOSE the game!
-        </div>
+    <div class="hidden-message-lose" id="lose_message">
+        Sorry! You LOSE the game!
+    </div>
 
     <center>
         <table id="puzzle_grid_ans" class="ans_table">
@@ -130,23 +119,31 @@
 
         <script>
             function getEmojiOptions() {
-                // const emojis = ["",
-                //     '👏', '👍', '🤞', '🤟', '🤝', 
-                //     '👏🏻', '👍🏻', '🫰🏻', '🤟🏻', '🤝🏻',
-                //     '👏🏼', '👍🏼', '🫰🏼', '🤟🏼', '🤝🏼', 
-                //     '👏🏽', '👍🏽', '🫰🏽', '🤟🏽', '🤝🏽',
-                //     '👏🏾', '👍🏾', '🫰🏾', '🤟🏾', '🤝🏾'
-                // ];
-                const emojis = ["",
-                    '1A', '1B', '1C', '1D', '1E',
-                    '2A', '2B', '2C', '2D', '2E',
-                    '3A', '3B', '3C', '3D', '3E',
-                    '4A', '4B', '4C', '4D', '4E',
-                    '5A', '5B', '5C', '5D', '5E'
+                const emojis = [
+                    { value: "", display: "" },
+                    { value: "blue_circle", display: "🔵" },
+                    { value: "red_circle", display: "🔴" },
+                    { value: "green_circle", display: "🟢" },
+                    { value: "yellow_circle", display: "🟡" },
+                    { value: "purple_circle", display: "🟣" },
+                    { value: "blue_square", display: "🟦" },
+                    { value: "red_square", display: "🟥" },
+                    { value: "green_square", display: "🟩" },
+                    { value: "yellow_square", display: "🟨" },
+                    { value: "purple_square", display: "🟪" },
+                    { value: "blue_heart", display: "💙" },
+                    { value: "red_heart", display: "❤️" },
+                    { value: "green_heart", display: "💚" },
+                    { value: "yellow_heart", display: "💛" },
+                    { value: "purple_heart", display: "💜" },
+                    { value: "blue_star", display: "⭐" }, // TODO: change the color
+                    { value: "red_star", display: "🌟" },
+                    { value: "green_star", display: "🌠" },
+                    { value: "yellow_star", display: "🌟" },
+                    { value: "purple_star", display: "🌠" },
                 ];
 
-                return (emojis.map(emoji => `<option value=${emoji}>${emoji}</option>`))
-                    .join('');
+                return emojis.map(emoji => `<option value="${emoji.value}">${emoji.display}</option>`).join('');
             }
 
             document.querySelectorAll('.cell-select').forEach(select => {
@@ -156,14 +153,13 @@
 
 
         <dataset id="lambda" type="text/hrf" style="display:none">
-            puzzle_size(5,5)
+            puzzle_size(4,4)
             init_puzzle
 
             column_name(0, "1")
             column_name(1, "2")
             column_name(2, "3")
             column_name(3, "4")
-            column_name(4, "5")
 
             verb("is at the same column as",is)
             verb("is to the left of",is_to_left_of)
@@ -179,14 +175,37 @@
 
             iscell(cell(1,1))
             iscell(cell(2,2))
+
+            <!-- Map emoji value to shape and color -->
+            <!-- emoji(V, S, C): V is value, S is shape, C is color -->
+            emoji(blue_circle, circle, blue)
+            emoji(red_circle, circle, red)
+            emoji(green_circle, circle, green)
+            emoji(yellow_circle, circle, yellow)
+            emoji(purple_circle, circle, purple)
+            emoji(blue_square, square, blue)
+            emoji(red_square, square, red)
+            emoji(green_square, square, green)
+            emoji(yellow_square, square, yellow)
+            emoji(purple_square, square, purple)
+            emoji(blue_heart, heart, blue)
+            emoji(red_heart, heart, red)
+            emoji(green_heart, heart, green)
+            emoji(yellow_heart, heart, yellow)
+            emoji(purple_heart, heart, purple)
+            emoji(blue_star, star, blue)
+            emoji(red_star, star, red)
+            emoji(green_star, star, green)
+            emoji(yellow_star, star, yellow)
+            emoji(purple_star, star, purple)
+
         </dataset>
 
-        <!--=======================================================================-->
+        <!-- ======================================================================= -->
 
         <ruleset id="library" type="text/hrf" style="display:none">
             select(cell(R, C), V)::value(cell(R, C), V)
             select(cell(R, C), V):: value(cell(R, C), V1) ==> ~value(cell(R, C), V1)
-
 
 
             <!-- Reltaions -->
