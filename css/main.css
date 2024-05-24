@@ -35,14 +35,12 @@ th, td {
     display: none;
     color: rgb(255, 106, 0);
     font-size: 2em;
-    text-align: center;
     font-family: 'Courier New', Courier, monospace;
 }
 .hidden-message-lose {
     display: none;
     color: rgb(43, 0, 255);
     font-size: 2em;
-    text-align: center;
     font-family: 'Courier New', Courier, monospace;
 }
 
@@ -99,4 +97,8 @@ th, td {
 /* Resetting border-bottom for stars */
 .star.blue, .star.red, .star.green, .star.yellow, .star.purple {
     border-bottom-color: transparent;
+}
+.ans_table {
+    display: none;
+    border-collapse: collapse;
 }
