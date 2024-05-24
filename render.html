@@ -16,8 +16,8 @@
 
         <!--=======================================================================-->
 
-        <h1>Your Puzzle Here!</h1>
-        <table id="puzzle_grid">
+        <h1 id="heading">Your Puzzle Here!</h1>
+        <table id="puzzle_grid" >
             <thead>
                 <tr>
                     <th></th>
@@ -59,6 +59,12 @@
         </table>
     </center>
     <div>
+        <button class="btn btn-primary" onclick="modbutton(this)" id="rule_button" widget="button">Show Me the Rules!</button>
+    </div>
+    <div>
+        <button class="btn btn-primary" onclick="modbutton(this)" id="start_button" widget="button">Start the GAME!</button>
+    </div>
+    <div>
         <button class="btn btn-primary" onclick="modbutton(this)" id="verify_button" widget="button">Verify Your
             Solution!</button>
     </div>
@@ -89,30 +95,30 @@
             <tbody>
                 <tr>
                     <th>First Row</th>
-                    <td><select class="cell-select" id="ans_cell(1,1)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(1,2)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(1,3)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(1,4)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(1,1)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(1,2)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(1,3)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(1,4)" onchange="modselector(this)"></select></td>
                 </tr>
                 <tr>
                     <th>Second Row</th>
-                    <td><select class="cell-select" id="ans_cell(2,1)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(2,2)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(2,3)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(2,4)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(2,1)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(2,2)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(2,3)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(2,4)" onchange="modselector(this)"></select></td>
                 </tr>
                 <tr>
                     <th>Third Row</th>
-                    <td><select class="cell-select" id="ans_cell(3,1)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(3,2)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(3,3)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(3,4)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(3,1)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(3,2)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(3,3)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(3,4)" onchange="modselector(this)"></select></td>
                 <tr>
                     <th>Fourth Row</th>
-                    <td><select class="cell-select" id="ans_cell(4,1)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(4,2)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(4,3)" onchange="modselector(this)"></select></td>
-                    <td><select class="cell-select" id="ans_cell(4,4)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(4,1)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(4,2)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(4,3)" onchange="modselector(this)"></select></td>
+                    <td><select class="cell-ans" id="ans_cell(4,4)" onchange="modselector(this)"></select></td>
                 </tr>
             </tbody>
         </table>
@@ -133,16 +139,19 @@
                     { value: "red_heart", display: "❤️" },
                     { value: "green_heart", display: "💚" },
                     { value: "yellow_heart", display: "💛" },
-                    { value: "blue_star", display: "⭐" }, // TODO: change the color using css here
-                    { value: "red_star", display: "🌟" },
-                    { value: "green_star", display: "🌠" },
-                    { value: "yellow_star", display: "🌟" },
+                    { value: "blue_star", display: "📘"}, 
+                    { value: "red_star", display: "📕"}, 
+                    { value: "green_star", display: "📗"}, 
+                    { value: "yellow_star", display: "📒" },
                 ];
 
                 return emojis.map(emoji => `<option value="${emoji.value}">${emoji.display}</option>`).join('');
             }
 
             document.querySelectorAll('.cell-select').forEach(select => {
+                select.innerHTML = getEmojiOptions();
+            });
+            document.querySelectorAll('.cell-ans').forEach(select => {
                 select.innerHTML = getEmojiOptions();
             });
         </script>
@@ -206,7 +215,7 @@
         <!-- ======================================================================= -->
 
         <ruleset id="library" type="text/hrf" style="display:none">
-            select(cell(R, C), V)::value(cell(R, C), V)
+            select(cell(R, C), V):: value(cell(R, C), V)
             select(cell(R, C), V):: value(cell(R, C), V1) ==> ~value(cell(R, C), V1)
 
 
@@ -243,19 +252,28 @@
                 emoji(X21, S21, C2) & emoji(X22, S22, C2) & emoji(X23, S23, C2) & emoji(X24, S24, C2) &
                 emoji(X31, S31, C3) & emoji(X32, S32, C3) & emoji(X33, S33, C3) & emoji(X34, S34, C3) &
                 emoji(X41, S41, C4) & emoji(X42, S42, C4) & emoji(X43, S43, C4) & emoji(X44, S44, C4)
+                        
+            <!-- ~init_puzzle -->
+            click(start_button) :: init_puzzle & random_grid([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) ==> style(puzzle_grid, display, block) & ~init_puzzle & fill_in([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44])
+            <!-- fill in the potential answer -->
+            fill_in([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) ::
+               value(ans_cell(1,1), X11) & value(ans_cell(1,2), X12) & value(ans_cell(1,3), X13) & value(ans_cell(1,4), X14) &
+                value(ans_cell(2,1), X21) & value(ans_cell(2,2), X22) & value(ans_cell(2,3), X23) & value(ans_cell(2,4), X24) &
+                value(ans_cell(3,1), X31) & value(ans_cell(3,2), X32) & value(ans_cell(3,3), X33) & value(ans_cell(3,4), X34) &
+                value(ans_cell(4,1), X41) & value(ans_cell(4,2), X42) & value(ans_cell(4,3), X43) & value(ans_cell(4,4), X44)
             
-
+            
             <!-- verify solution -->
-            click(verify_button) :: check() ==> style(win_message, display, block) & ~style(win_message, display, none)
-            click(verify_button) :: check() ==> style(lose_message, display, none) & ~style(lose_message, display, block)
+            click(verify_button) :: ~init_puzzle & check() ==> style(win_message, display, block) & ~style(win_message, display, none)
+            click(verify_button) :: ~init_puzzle & check() ==> style(lose_message, display, none) & ~style(lose_message, display, block)
 
-            click(verify_button) :: ~check() ==> style(lose_message, display, block) & ~style(lose_message, display, none)
-            click(verify_button) :: ~check() ==> style(win_message, display, none) & ~style(win_message, display, block)
+            click(verify_button) :: ~init_puzzle & ~check() ==> style(lose_message, display, block) & ~style(lose_message, display, none)
+            click(verify_button) :: ~init_puzzle & ~check() ==> style(win_message, display, none) & ~style(win_message, display, block)
 
-            check() :- user_answer([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) &
+            check() :- ~init_puzzle & user_answer([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) &
                 valid_grid([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44])
             <!-- For debug -->
-            check() :- value(cell(1,1), blue_square)
+            <!-- check() :- value(cell(1,1), blue_circle) -->
 
             <!-- user answer -->
             user_answer([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) :-
@@ -276,7 +294,7 @@
                 mutex(S41, S42, S43, S44) & mutex(C1, C2, C3, C4)
 
             <!-- check answer -->
-            click(solution_button) :: style(puzzle_grid_ans, display, block)
+            click(solution_button) ::  ~init_puzzle ==> style(puzzle_grid_ans, display, block)
 
             <!-- helper functions -->
             <!-- get_nth(L, N, E) :- get the "N"th element in list "L", store the element in "E" -->
@@ -288,6 +306,48 @@
         <!--=======================================================================-->
 
     </center>
+
+<!-- The Modal -->
+<div id="rulesModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Here are the rules!</h2>
+        <ul>
+            <li>Rule 1: Each row is consist of four ditinct shapes with the same color</li>
+            <li>Rule 2: The four elements in each column have distinct colors </li>
+            <li>Rule 3: Clues Section are the constraints that your soultion should satisify</li>
+            <li>Rule 4: You win the game if you fulfill Rule 1 & Rule 2 & all the clues</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("rulesModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("rule_button");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
 
 </body>
 
