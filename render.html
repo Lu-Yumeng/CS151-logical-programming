@@ -225,18 +225,39 @@
                 value(ans_cell(3,1), X31) & value(ans_cell(3,2), X32) & value(ans_cell(3,3), X33) & value(ans_cell(3,4), X34) &
                 value(ans_cell(4,1), X41) & value(ans_cell(4,2), X42) & value(ans_cell(4,3), X43) & value(ans_cell(4,4), X44)
                   
-            <!-- generate all clues -->
+            <!-- clue definition -->
             is_clue([Type, Clue]) :- clue_color_of_row(Clue) & evaluate(color_of_row, Type)
+            is_clue([Type, Clue]) :- clue_shape_of_cell(Clue) & evaluate(shape_of_cell, Type)
+            is_clue([Type, Clue]) :- clue_emoji_of_cell(Clue) & evaluate(emoji_of_cell, Type)
+            is_clue([Type, Clue]) :- clue_left_of(Clue) & evaluate(left_of, Type)
+            is_clue([Type, Clue]) :- clue_top_of(Clue) & evaluate(top_of, Type)
 
+            <!-- 1. color of a row -->
+            clue_color_of_row([Color, R]) :- ~init_puzzle & color(Color) & row(R) & 
+                value(ans_cell(R, 1), Emoji) & emoji(Emoji, _, Color)
+            <!-- 2. shape of a cell -->
+            clue_shape_of_cell([Shape, R, C]) :- ~init_puzzle & shape(Shape) & row(R) & col(C) & 
+                value(ans_cell(R, C), Emoji) & emoji(Emoji, Shape, _)
+            <!-- 3. emoji of a cell -->
+            clue_emoji_of_cell([Emoji, R, C]) :- ~init_puzzle & emoji(Emoji, _, _) & row(R) & col(C) & 
+                value(ans_cell(R, C), Emoji)
+            <!-- 4. directly to the left ( Emoji1 left, Emoji2 right ) -->
+            clue_left_of([Emoji1, Emoji2]) :- ~init_puzzle & row(R) & col(C1) & col(C2) &
+                evaluate(minus(C2, 1), C1) & value(ans_cell(R, C1), Emoji1) & value(ans_cell(R, C2), Emoji2)
+            <!-- 5. directly on top of ( Emoji1 top, Emoji2 below ) -->
+            clue_top_of([Emoji1, Emoji2]) :- ~init_puzzle & row(R1) & row(R2) & col(C) &
+                evaluate(minus(R2, 1), R1) & value(ans_cell(R1, C), Emoji1) & value(ans_cell(R2, C), Emoji2)
+            <!-- TODO: other not so informative clues, e.g. on the same column -->
+
+            <!-- generate one clue at a time and add to list -->
             random_clue(TypedClue) :- evaluate(choose(X, is_clue(X)), TypedClue)
 
-            <!-- generate 4 clues for now, gradually add them to list -->
             generate_clues(0, [])
             generate_clues(N, TypedClue!Rest) :- 
-                leq(1, N) & leq(N, 4) & 
-                random_clue(TypedClue) &
-                evaluate(minus(N, 1), N1) & 
-                generate_clues(N1, Rest)
+                leq(1, N) &
+                evaluate(minus(N, 1), N1)&
+                generate_clues(N1, Rest) &
+                random_clue(TypedClue)
             
             <!-- remove duplicate clues -->
             remove_duplicates([], [])
@@ -245,17 +266,9 @@
             remove_duplicates(E!L, E!R) :-
                 ~member(E, L) & remove_duplicates(L, R)
 
-            <!-- Has bug -->
-            final_clues(Clues) :- generate_clues(4, Clues) & remove_duplicates(Clues, Clues)
-
-            <!-- 1. color of a row -->
-            clue_color_of_row([C, R]) :- ~init_puzzle & color(C) & row(R) & 
-                value(ans_cell(R, 1), V) & emoji(V, _, C)
-            <!-- 2. shape / color of a cell -->
-            <!-- 3. to the left / right -->
-            <!-- 4. on top of / below -->
-            <!-- 5. on the same column -->
-            
+            <!-- get clue set (generate 7 clues and remove duplicates) --> 
+            clue_set(ClueSet) :- generate_clues(7, Clues) & remove_duplicates(Clues, ClueSet)
+    
             <!-- verify solution -->
             click(verify_button) :: ~init_puzzle & check() ==> style(win_message, display, block) & ~style(win_message, display, none)
             click(verify_button) :: ~init_puzzle & check() ==> style(lose_message, display, none) & ~style(lose_message, display, block)
@@ -288,12 +301,6 @@
 
             <!-- check answer -->
             click(solution_button) ::  ~init_puzzle ==> style(puzzle_grid_ans, display, block)
-
-            <!-- helper functions -->
-            <!-- get_nth(L, N, E) :- get the "N"th element in list "L", store the element in "E" -->
-            <!-- TODO: has bug!!!! -->
-            get_nth(E!_, 0, E)
-            get_nth(_!L, N, E) :- leq(1, N) & evaluate(minus(N, 1), N1) & get_nth(L, N1, E)
 
         </ruleset>
         <!--=======================================================================-->
