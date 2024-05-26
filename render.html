@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <title>Your Puzzle Here!</title>
     <link rel="stylesheet" href="./css/main.css">
-    <script type="text/javascript" src="./js/epilog.js"></script>
-    <script type="text/javascript" src="./js/worksheets.js"></script>
-    <script src="./js/script.js"></script>
 </head>
 
 <!--=======================================================================-->
@@ -268,6 +265,10 @@
 
             <!-- get clue set (generate 7 clues and remove duplicates) --> 
             clue_set(ClueSet) :- generate_clues(7, Clues) & remove_duplicates(Clues, ClueSet)
+
+            <!-- rule button -->
+            click(rule_button) :: style(rulesModal, display, block) & ~style(rulesModal, display, none)
+            click(close_button) :: ~style(rulesModal, display, block) & style(rulesModal, display, none)
     
             <!-- verify solution -->
             click(verify_button) :: ~init_puzzle & check() ==> style(win_message, display, block) & ~style(win_message, display, none)
@@ -310,7 +311,7 @@
 <!-- The Modal -->
 <div id="rulesModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
+        <span class="close" id="close_button" onclick="modbutton(this)">&times;</span>
         <h2>Here are the rules!</h2>
         <ul>
             <li>Goal: Fill the 4*4 grid with 16 emojis (4 shapes x 4 colors), and satisfy all the rules.</li>
@@ -321,6 +322,9 @@
         </ul>
     </div>
 </div>
+<script type="text/javascript" src="./js/epilog.js"></script>
+<script type="text/javascript" src="./js/worksheets.js"></script>
+<script src="./js/script.js"></script>
 </body>
 
 <grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open">
