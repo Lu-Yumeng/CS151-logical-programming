@@ -11,6 +11,20 @@
 
 <body onload="initialize()" data-new-gr-c-s-check-loaded="14.1173.0" data-gr-ext-installed="">
     <center>
+        <input id='testnode'
+        type='text'
+        value='hello'
+        size='30'
+        style='color:black'/>
+    </center>
+    <center>
+        <input id='testclue'
+        type='text'
+        value='hello'
+        size='30'
+        style='color:black'/>
+    </center>
+    <center>
 
         <!--=======================================================================-->
 
@@ -56,12 +70,15 @@
             </tbody>
         </table>
     </center>
-    <div>
+    <!-- <div>
         <button class="btn btn-primary" onclick="modbutton(this)" id="rule_button" widget="button">Show Me the Rules!</button>
-        <!-- TODO: pop up window -->
-    </div> 
+    </div>  -->
     <div>
         <button class="btn btn-primary" onclick="modbutton(this)" id="start_button" widget="button">Start the GAME!</button>
+        <!-- TODO: disable / hide this button when game started -->
+    </div>
+    <div>
+        <button class="btn btn-primary" onclick="modbutton(this)" id="add_hint" widget="button">Add some Hints!</button>
         <!-- TODO: disable / hide this button when game started -->
     </div>
     <div>
@@ -180,6 +197,7 @@
         <!-- ======================================================================= -->
 
         <ruleset id="library" type="text/hrf" style="display:none">
+            <!-- select an element for the grid -->
             select(cell(R, C), V):: value(cell(R, C), V)
             select(cell(R, C), V):: value(cell(R, C), V1) ==> ~value(cell(R, C), V1)
 
@@ -213,8 +231,18 @@
             click(start_button) :: init_puzzle & random_grid([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) 
                 ==> style(puzzle_grid, display, block) &
                     ~init_puzzle & 
-                    fill_in([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44])
+                    fill_in([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) & can_add_hint
+            click(add_hint) :: ~init_puzzle & can_add_hint & clue_set(ClueSet) & evaluate(ClueSet, MyClues) ==> display(MyClues) & ~can_add_hint & ~style(add_hint,display, "inline-block") & style(add_hint,display, none)
+    
+            <!-- display clues -->
+            generate_single_hint([Clue_Type, Detail], Sentence) :-  evaluate(hello, Sentence)
+            <!-- evaluate(stringjoin(Clue_Type,stringjoin(Detail)), Sentence)  -->
 
+            display(MyClues) :: evaluate(length(MyClues), 6) ==> evaluate([H1, H2, H3, H4, H5, H6], MyClues) & value(testnode, 6) & generate_single_hint(H1,S1) & value(testclue, S1)
+
+            display(MyClues) :: evaluate(length(MyClues), 7) ==> evaluate([H1, H2, H3, H4, H5, H6, H7], MyClues) & value(testnode, 7) & generate_single_hint(H1,S1) & value(testclue, S1)
+            
+        
             <!-- fill in the potential answer -->
             fill_in([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) ::
                value(ans_cell(1,1), X11) & value(ans_cell(1,2), X12) & value(ans_cell(1,3), X13) & value(ans_cell(1,4), X14) &
