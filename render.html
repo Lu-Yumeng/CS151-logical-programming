@@ -293,21 +293,57 @@
             is_clue([Type, Clue]) :- clue_left_of(Clue) & evaluate(left_of, Type)
             is_clue([Type, Clue]) :- clue_top_of(Clue) & evaluate(top_of, Type)
 
+            satisfied_clue([Type, Clue]) :- satisfied_clue_color_of_row(Clue) & evaluate(color_of_row, Type)
+            satisfied_clue([Type, Clue]) :- satisfied_clue_shape_of_cell(Clue) & evaluate(shape_of_cell, Type)
+            satisfied_clue([Type, Clue]) :- satisfied_clue_emoji_of_cell(Clue) & evaluate(emoji_of_cell, Type)
+            satisfied_clue([Type, Clue]) :- satisfied_clue_left_of(Clue) & evaluate(left_of, Type)
+            satisfied_clue([Type, Clue]) :- satisfied_clue_top_of(Clue) & evaluate(top_of, Type)
+
             <!-- 1. color of a row -->
             clue_color_of_row([Color, R]) :- ~init_puzzle & color(Color) & row(R) & 
                 value(ans_cell(R, 1), Emoji) & emoji(Emoji, _, Color)
+
+                <!-- we define the clue as satisfied if the 4 emojis are of the right color and distinct shape -->
+            satisfied_clue_color_of_row([Color, R]) :- ~init_puzzle & 
+                value(cell(R, 1), Emoji1) & emoji(Emoji1, Shape1, Color) & 
+                value(cell(R, 2), Emoji2) & emoji(Emoji2, Shape2, Color) & 
+                value(cell(R, 3), Emoji3) & emoji(Emoji3, Shape3, Color) & 
+                value(cell(R, 4), Emoji4) & emoji(Emoji4, Shape4, Color) &
+                mutex(Shape1, Shape2, Shape3, Shape4)
+                
             <!-- 2. shape of a cell -->
             clue_shape_of_cell([Shape, R, C]) :- ~init_puzzle & shape(Shape) & row(R) & col(C) & 
                 value(ans_cell(R, C), Emoji) & emoji(Emoji, Shape, _)
+
+            satisfied_clue_shape_of_cell([Shape, R, C]) :- ~init_puzzle & 
+                value(cell(R, C), Emoji) & emoji(Emoji, Shape, _)
+
             <!-- 3. emoji of a cell -->
             clue_emoji_of_cell([Emoji, R, C]) :- ~init_puzzle & emoji(Emoji, _, _) & row(R) & col(C) & 
                 value(ans_cell(R, C), Emoji)
+
+            satisfied_clue_emoji_of_cell([Emoji, R, C]) :- ~init_puzzle & value(cell(R, C), Emoji)
+
             <!-- 4. directly to the left ( Emoji1 left, Emoji2 right ) -->
             clue_left_of([Emoji1, Emoji2]) :- ~init_puzzle & row(R) & col(C1) & col(C2) &
                 evaluate(minus(C2, 1), C1) & value(ans_cell(R, C1), Emoji1) & value(ans_cell(R, C2), Emoji2)
+            
+                <!-- we define the clue as satisfied only if there are no repeated Emoji1 & Emoji2 -->
+            satisfied_clue_left_of([Emoji1, Emoji2]) :- ~init_puzzle &
+                value(cell(R, C1), Emoji1) & value(cell(R, C2), Emoji2) & evaluate(minus(C2, 1), C1) &
+                ~(value(cell(Ra, Ca), Emoji1) & (~evaluate(Ra, R) | ~evaluate(Ca, C1))) &
+                ~(value(cell(Rb, Cb), Emoji2) & (~evaluate(Rb, R) | ~evaluate(Cb, C2)))
+
             <!-- 5. directly on top of ( Emoji1 top, Emoji2 below ) -->
             clue_top_of([Emoji1, Emoji2]) :- ~init_puzzle & row(R1) & row(R2) & col(C) &
                 evaluate(minus(R2, 1), R1) & value(ans_cell(R1, C), Emoji1) & value(ans_cell(R2, C), Emoji2)
+
+                <!-- we define the clue as satisfied only if there are no repeated Emoji1 & Emoji2 -->
+            satisfied_clue_top_of([Emoji1, Emoji2]) :- ~init_puzzle &
+                value(cell(R1, C), Emoji1) & value(cell(R2, C), Emoji2) & evaluate(minus(R2, 1), R1) &
+                ~(value(cell(Ra, C), Emoji1) & (~evaluate(Ra, R1) | ~evaluate(C, C))) &
+                ~(value(cell(Rb, C), Emoji2) & (~evaluate(Rb, R2) | ~evaluate(C, C)))
+
             <!-- TODO: other not so informative clues, e.g. on the same column -->
 
             <!-- generate one clue at a time and add to list -->
@@ -378,10 +414,11 @@
             click(verify_button) :: ~init_puzzle & ~check() ==> style(lose_message, display, block) & ~style(lose_message, display, none)
             click(verify_button) :: ~init_puzzle & ~check() ==> style(win_message, display, none) & ~style(win_message, display, block)
 
+            <!-- TODO: use satisfied_clue to add clue constraints here -->
             check() :- ~init_puzzle & user_answer([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) &
                 valid_grid([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44])
             <!-- For debug -->
-            <!-- check() :- value(cell(1,1), blue_circle) -->
+            <!-- check() :- satisfied_clue([left_of, [blue_circle, blue_book]]) -->
 
             <!-- user answer -->
             user_answer([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) :-
