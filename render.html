@@ -232,15 +232,16 @@
                 ==> style(puzzle_grid, display, block) &
                     ~init_puzzle & 
                     fill_in([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) & can_add_hint
-            click(add_hint) :: ~init_puzzle & can_add_hint & clue_set(ClueSet) & evaluate(ClueSet, MyClues) ==> display(MyClues) & ~can_add_hint & ~style(add_hint,display, "inline-block") & style(add_hint,display, none)
+
+            click(add_hint) :: ~init_puzzle & can_add_hint & clue_set(ClueSet)
+                    ==> ourclue(ClueSet) & display(ClueSet) & ~can_add_hint & ~style(add_hint,display, "inline-block") & style(add_hint,display, none)
     
-            <!-- display clues -->
+            <!-- display clues test -->
             generate_single_hint([Clue_Type, Detail], Sentence) :-  evaluate(hello, Sentence)
-            <!-- evaluate(stringjoin(Clue_Type,stringjoin(Detail)), Sentence)  -->
 
-            display(MyClues) :: evaluate(length(MyClues), 6) ==> evaluate([H1, H2, H3, H4, H5, H6], MyClues) & value(testnode, 6) & generate_single_hint(H1,S1) & value(testclue, S1)
+            display(ClueSet) :: evaluate(length(ClueSet), 6) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6]) & generate_single_hint(H1,S1) ==> value(testnode, 6) & value(testclue, S1)
 
-            display(MyClues) :: evaluate(length(MyClues), 7) ==> evaluate([H1, H2, H3, H4, H5, H6, H7], MyClues) & value(testnode, 7) & generate_single_hint(H1,S1) & value(testclue, S1)
+            display(ClueSet) :: evaluate(length(ClueSet), 7) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6, H7])  & generate_single_hint(H1,S1)  ==> value(testnode, 7) & value(testclue, S1)
             
         
             <!-- fill in the potential answer -->
