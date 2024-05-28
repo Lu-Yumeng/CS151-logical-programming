@@ -10,20 +10,14 @@
 <!--=======================================================================-->
 
 <body onload="initialize()" data-new-gr-c-s-check-loaded="14.1173.0" data-gr-ext-installed="">
-    <center>
+    <!-- <center>
         <input id='testnode'
         type='text'
         value='hello'
         size='30'
-        style='color:black'/>
-    </center>
-    <center>
-        <input id='testclue'
-        type='text'
-        value='hello'
-        size='30'
-        style='color:black'/>
-    </center>
+        style='color:black'
+        display ='none'/>
+    </center> -->
     <center>
 
         <!--=======================================================================-->
@@ -70,9 +64,21 @@
             </tbody>
         </table>
     </center>
-    <!-- <div>
+    <span id="clue_section" display="none">
+        <h1 class="clues_heading" id="clues_heading">Clues~~</h1>
+        <div class="clue-container">
+            <span id="clue1" class="clue">Clue 1</span>
+            <span id="clue2" class="clue">Clue 2</span>
+            <span id="clue3" class="clue">Clue 3</span>
+            <span id="clue4" class="clue">Clue 4</span>
+            <span id="clue5" class="clue">Clue 5</span>
+            <span id="clue6" class="clue">Clue 6</span>
+            <span id="clue7" class="clue">Clue 7</span>
+        </div>
+    </span>
+    <div>
         <button class="btn btn-primary" onclick="modbutton(this)" id="rule_button" widget="button">Show Me the Rules!</button>
-    </div>  -->
+    </div> 
     <div>
         <button class="btn btn-primary" onclick="modbutton(this)" id="start_button" widget="button">Start the GAME!</button>
         <!-- TODO: disable / hide this button when game started -->
@@ -140,8 +146,10 @@
                 </tr>
             </tbody>
         </table>
+    </center>
 
 
+    <center>
         <dataset id="lambda" type="text/hrf" style="display:none">
             init_puzzle
 
@@ -157,12 +165,6 @@
 
             total_clues(5)
 
-            verb("is at the same column as",is)
-            verb("is to the left of",is_to_left_of)
-            verb("is to the right of",is_to_right_of)
-            verb("is to the either side of",is_to_either_side_of)
-            verb("is at column",is_at_certain_location)
-
             shape(circle)
             shape(square)
             shape(heart)
@@ -172,6 +174,26 @@
             color(red)
             color(green)
             color(yellow)
+
+            translate(red_circle, "red circle")
+            translate(red_heart, "red heart")
+            translate(red_square, "red square")
+            translate(red_star, "red book")
+
+            translate(blue_circle, "blue circle")
+            translate(blue_heart, "blue heart")
+            translate(blue_square, "blue square")
+            translate(blue_star, "blue book")
+
+            translate(yellow_circle, "yellow circle")
+            translate(yellow_heart, "yellow heart")
+            translate(yellow_square, "yellow square")
+            translate(yellow_star, "yellow book")
+
+            translate(green_circle, "green circle")
+            translate(green_heart, "green heart")
+            translate(green_square, "green square")
+            translate(green_star, "green book")
 
             <!-- Map emoji value to shape and color -->
             <!-- emoji(V, S, C): V is value, S is shape, C is color -->
@@ -234,14 +256,43 @@
                     fill_in([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) & can_add_hint
 
             click(add_hint) :: ~init_puzzle & can_add_hint & clue_set(ClueSet)
-                    ==> ourclue(ClueSet) & display(ClueSet) & ~can_add_hint & ~style(add_hint,display, "inline-block") & style(add_hint,display, none)
+                    ==> ourclue(ClueSet) & display(ClueSet) & ~can_add_hint & ~style(add_hint,display, "inline-block") 
     
             <!-- display clues test -->
-            generate_single_hint([Clue_Type, Detail], Sentence) :-  evaluate(hello, Sentence)
+            <!-- shape of cell -->
+            generate_single_hint([Clue_Type, Detail], Sentence) :- 
+            evaluate(Clue_Type, shape_of_cell) & evaluate(Detail, [Shape, R, C]) & evaluate(stringjoin(["The shape at row", R, "column", C, "is", Shape]), Sentence)
+            
+            <!-- emoji_of_cell -->
+            generate_single_hint([Clue_Type, Detail], Sentence) :- 
+            evaluate(Clue_Type, emoji_of_cell) & evaluate(Detail, [Shape, R, C]) & translate(Shape, TShape) & evaluate(stringjoin([TShape, "is at row", R, "column", C]), Sentence)
 
-            display(ClueSet) :: evaluate(length(ClueSet), 6) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6]) & generate_single_hint(H1,S1) ==> value(testnode, 6) & value(testclue, S1)
+            <!-- left_of -->
+            generate_single_hint([Clue_Type, Detail], Sentence) :- 
+            evaluate(Clue_Type, left_of) & evaluate(Detail, [Left, Right]) & translate(Left, TLeft) & translate(Right, TRight) & evaluate(stringjoin([TLeft, "is to the left of", TRight]), Sentence) 
 
-            display(ClueSet) :: evaluate(length(ClueSet), 7) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6, H7])  & generate_single_hint(H1,S1)  ==> value(testnode, 7) & value(testclue, S1)
+            <!-- top_of -->
+            generate_single_hint([Clue_Type, Detail], Sentence) :- 
+            evaluate(Clue_Type, top_of) & evaluate(Detail, [Top, Bottom]) & translate(Top, TTop) & translate(Bottom, TBottom) & evaluate(stringjoin([TTop, "is on top of", TBottom]), Sentence) 
+            
+            <!-- color_of_row -->
+            generate_single_hint([Clue_Type, Detail], Sentence) :- 
+            evaluate(Clue_Type, color_of_row) & evaluate(Detail, [Color, R]) & evaluate(stringappend("The color of row ", R, " is ", Color), Sentence)  
+            
+            show_clue_section():: style(clue1, display, inline) & ~style(clue1, display, none) & style(clue2, display, inline) & ~style(clue2, display, none) & style(clue3, display, inline) & ~style(clue3, display, none) 
+            & style(clue4, display, inline) & ~style(clue4, display, none) & style(clue5, display, inline) & ~style(clue5, display, none) & style(clue6, display, inline) & ~style(clue6, display, none)
+            & style(clues_heading, display, inline) & ~style(clues_heading, display, none) 
+                        
+            display(ClueSet) :: evaluate(length(ClueSet), 6) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6]) 
+            & generate_single_hint(H1,S1) & generate_single_hint(H2,S2) & generate_single_hint(H3,S3) & generate_single_hint(H4,S4) & generate_single_hint(H5,S5) & generate_single_hint(H6,S6)
+            ==> innerhtml(clue1, S1)& innerhtml(clue2, S2)& innerhtml(clue3, S3)& innerhtml(clue4, S4)& innerhtml(clue5, S5)& innerhtml(clue6, S6) & style(add_hint,display, none) 
+            & show_clue_section()
+
+
+            display(ClueSet) :: evaluate(length(ClueSet), 7) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6, H7])  
+            & generate_single_hint(H1,S1) & generate_single_hint(H2,S2) & generate_single_hint(H3,S3) & generate_single_hint(H4,S4) & generate_single_hint(H5,S5) & generate_single_hint(H6,S6) & generate_single_hint(H7,S7)
+            ==> innerhtml(clue1, S1)& innerhtml(clue2, S2)& innerhtml(clue3, S3)& innerhtml(clue4, S4)& innerhtml(clue5, S5)& innerhtml(clue6, S6) & innerhtml(clue7, S7) & style(add_hint,display, none) 
+            & show_clue_section() & ~style(clue7, display, none)
             
         
             <!-- fill in the potential answer -->
