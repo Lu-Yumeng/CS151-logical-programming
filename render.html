@@ -161,6 +161,8 @@
         <dataset id="lambda" type="text/hrf" style="display:none">
             init_puzzle
 
+            rule_hidden
+
             row(1)
             row(2)
             row(3)
@@ -268,11 +270,7 @@
                         
             <!-- init Game -->
             click(start_button) :: init_puzzle & random_grid([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) 
-                ==> style(puzzle_grid, display, block) &
-                    style(verify_button, display, inline-block) &
-                    style(solution_button, display, inline-block) &
-                    style(start_button, display, none) &
-                    ~init_puzzle & 
+                ==> ~init_puzzle & 
                     fill_in([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) & can_add_hint
 
             click(add_hint) :: ~init_puzzle & can_add_hint & clue_set(ClueSet)
@@ -366,7 +364,24 @@
             <!-- get clue set (generate 7 clues and remove duplicates) --> 
             clue_set(ClueSet) :- generate_clues(7, Clues) & remove_duplicates(Clues, ClueSet)
 
-                    
+                        
+            <!-- all style changes -->
+            style(Clue, "background-color", "rgb(173, 161, 182)") :- satisfied_clue(H) & match_id(Clue, H)
+            style(puzzle_grid, display, block) :- ~init_puzzle
+            style(verify_button, display, inline-block) :- ~init_puzzle
+            style(solution_button, display, inline-block) :- ~init_puzzle
+            style(start_button, display, none) :- ~init_puzzle
+            style(clue1, display, inline) :- match_id(clue1, _)
+            style(clue2, display, inline) :- match_id(clue2, _) 
+            style(clue3, display, inline) :- match_id(clue3, _)
+            style(clue4, display, inline) :- match_id(clue4, _) 
+            style(clue5, display, inline) :- match_id(clue5, _) 
+            style(clue6, display, inline) :- match_id(clue6, _)
+            style(clue7, display, inline) :- match_id(clue7, _)
+            style(clues_heading, display, inline) :- match_id(clue1, _) & match_id(clue2, _) & match_id(clue3, _)
+            & match_id(clue4, _) & match_id(clue5, _) & match_id(clue6, _)
+            
+
             <!-- display clues -->
             <!-- shape of cell -->
             generate_single_hint([Clue_Type, Detail], Sentence) :- 
@@ -386,39 +401,49 @@
             
             <!-- color_of_row -->
             generate_single_hint([Clue_Type, Detail], Sentence) :- 
-            evaluate(Clue_Type, color_of_row) & evaluate(Detail, [Color, R]) & color_translate(Color, TC) & evaluate(stringappend("The color of row ", R, " is ", TC), Sentence)  
-            
-            show_clue_section():: style(clue1, display, inline) & ~style(clue1, display, none) & style(clue2, display, inline) & ~style(clue2, display, none) & style(clue3, display, inline) & ~style(clue3, display, none) 
-            & style(clue4, display, inline) & ~style(clue4, display, none) & style(clue5, display, inline) & ~style(clue5, display, none) & style(clue6, display, inline) & ~style(clue6, display, none)
-            & style(clues_heading, display, inline) & ~style(clues_heading, display, none) 
+            evaluate(Clue_Type, color_of_row) & evaluate(Detail, [Color, R]) & color_translate(Color, TC) & evaluate(stringappend("The color of row ", R, " is ", TC), Sentence)   
                         
             display(ClueSet) :: evaluate(length(ClueSet), 6) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6]) 
             & generate_single_hint(H1,S1) & generate_single_hint(H2,S2) & generate_single_hint(H3,S3) & generate_single_hint(H4,S4) & generate_single_hint(H5,S5) & generate_single_hint(H6,S6)
             ==> innerhtml(clue1, S1)& innerhtml(clue2, S2)& innerhtml(clue3, S3)& innerhtml(clue4, S4)& innerhtml(clue5, S5)& innerhtml(clue6, S6) & style(add_hint,display, none) 
-            & show_clue_section()
+            & match_id(clue1, H1) & match_id(clue2, H2) & match_id(clue3, H3) & match_id(clue4, H4) & match_id(clue5, H5) & match_id(clue6, H6)
 
             display(ClueSet) :: evaluate(length(ClueSet), 7) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6, H7])  
             & generate_single_hint(H1,S1) & generate_single_hint(H2,S2) & generate_single_hint(H3,S3) & generate_single_hint(H4,S4) & generate_single_hint(H5,S5) & generate_single_hint(H6,S6) & generate_single_hint(H7,S7)
             ==> innerhtml(clue1, S1)& innerhtml(clue2, S2)& innerhtml(clue3, S3)& innerhtml(clue4, S4)& innerhtml(clue5, S5)& innerhtml(clue6, S6) & innerhtml(clue7, S7) & style(add_hint,display, none) 
-            & show_clue_section() & ~style(clue7, display, none)
+            & match_id(clue1, H1) & match_id(clue2, H2) & match_id(clue3, H3) & match_id(clue4, H4) & match_id(clue5, H5) & match_id(clue6, H6) & match_id(clue7, H7)
             
 
             <!-- rule button -->
-            click(rule_button) :: style(rulesModal, display, block) & ~style(rulesModal, display, none)
-            click(close_button) :: ~style(rulesModal, display, block) & style(rulesModal, display, none)
+            click(rule_button) :: rule_hidden  ==> ~rule_hidden
+            click(close_button) :: ~rule_hidden ==> rule_hidden
+            style(rulesModal, display, block) :- ~rule_hidden
+            style(rulesModal, display, none) :- rule_hidden
     
             <!-- verify solution -->
-            click(verify_button) :: ~init_puzzle & check() ==> style(win_message, display, block) & ~style(win_message, display, none)
-            click(verify_button) :: ~init_puzzle & check() ==> style(lose_message, display, none) & ~style(lose_message, display, block)
+            style(win_message, display, block) :- verify_button_clicked_win
+            style(win_message, display, none) :- verify_button_clicked_lose
+            style(lose_message, display, block) :- verify_button_clicked_lose
+            style(lose_message, display, none) :- verify_button_clicked_win
 
-            click(verify_button) :: ~init_puzzle & ~check() ==> style(lose_message, display, block) & ~style(lose_message, display, none)
-            click(verify_button) :: ~init_puzzle & ~check() ==> style(win_message, display, none) & ~style(win_message, display, block)
+            click(verify_button) :: ~init_puzzle & check() & ourclue(ClueSet) & valid(ClueSet) ==> verify_button_clicked_win & ~verify_button_clicked_lose
+            click(verify_button) :: ~init_puzzle & check() & ourclue(ClueSet) & valid(ClueSet) ==> verify_button_clicked_win & ~verify_button_clicked_lose
 
-            <!-- TODO: use satisfied_clue to add clue constraints here -->
-            check() :- ~init_puzzle & user_answer([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) &
-                valid_grid([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44])
+            click(verify_button) :: ~init_puzzle & ~check() ==> verify_button_clicked_lose & ~verify_button_clicked_win
+            click(verify_button) :: ~init_puzzle & ~check() ==> verify_button_clicked_lose & ~verify_button_clicked_win
+            click(verify_button) :: ~init_puzzle & ourclue(ClueSet) & ~valid(ClueSet) ==> verify_button_clicked_lose & ~verify_button_clicked_win
+            click(verify_button) :: ~init_puzzle & ourclue(ClueSet) & ~valid(ClueSet) ==> verify_button_clicked_lose & ~verify_button_clicked_win
+
+            check() :- ~init_puzzle & user_answer([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) & 
+            valid_grid([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44])
+            
             <!-- For debug -->
-            <!-- check() :- satisfied_clue([left_of, [blue_circle, blue_book]]) -->
+            <!-- check() :- true -->
+            valid(ClueSet) :- evaluate(length(ClueSet), 6) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6]) 
+            & satisfied_clue(H1)  & satisfied_clue(H2)  & satisfied_clue(H3)  & satisfied_clue(H4)  & satisfied_clue(H5)  & satisfied_clue(H6) 
+
+            verify(ClueSet) :- evaluate(length(ClueSet), 7) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6, H7]) 
+            & satisfied_clue(H1)  & satisfied_clue(H2)  & satisfied_clue(H3)  & satisfied_clue(H4)  & satisfied_clue(H5)  & satisfied_clue(H6) & satisfied_clue(H7)
 
             <!-- user answer -->
             user_answer([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) :-
@@ -439,7 +464,8 @@
                 mutex(S41, S42, S43, S44) & mutex(C1, C2, C3, C4)
 
             <!-- check answer -->
-            click(solution_button) ::  ~init_puzzle ==> style(puzzle_grid_ans, display, block)
+            click(solution_button) ::  ~init_puzzle ==> solution
+            style(puzzle_grid_ans, display, block) :- solution
 
         </ruleset>
         <!--=======================================================================-->
