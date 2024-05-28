@@ -175,25 +175,37 @@
             color(green)
             color(yellow)
 
-            translate(red_circle, "red circle")
-            translate(red_heart, "red heart")
-            translate(red_square, "red square")
-            translate(red_star, "red book")
+            translate(red_circle, "🔴")
+            translate(red_heart, "❤️")
+            translate(red_square, "🟥")
 
-            translate(blue_circle, "blue circle")
-            translate(blue_heart, "blue heart")
-            translate(blue_square, "blue square")
-            translate(blue_star, "blue book")
+            translate(blue_circle, "🔵")
+            translate(blue_heart, "💙")
+            translate(blue_square, "🟦")
 
-            translate(yellow_circle, "yellow circle")
-            translate(yellow_heart, "yellow heart")
-            translate(yellow_square, "yellow square")
-            translate(yellow_star, "yellow book")
+            translate(yellow_circle, "🟡")
+            translate(yellow_heart, "💛")
+            translate(yellow_square, "🟨")
+            
+            translate(green_star, "📗")
+            translate(yellow_star, "📒")
+            translate(blue_star, "📘")
+            translate(red_star, "📕")
 
-            translate(green_circle, "green circle")
-            translate(green_heart, "green heart")
-            translate(green_square, "green square")
-            translate(green_star, "green book")
+            translate(green_circle, "🟢")
+            translate(green_heart, "💚")
+            translate(green_square, "🟩")
+
+            shape_to_emoji(star, "📖")
+            shape_to_emoji(circle, "⭕️")
+            shape_to_emoji(heart, "💟")
+            shape_to_emoji(square, "🟫")
+
+            color_translate(green, "🪀")
+            color_translate(red, "🛑")
+            color_translate(yellow, "⭐️")
+            color_translate(blue, "🔷")
+            
 
             <!-- Map emoji value to shape and color -->
             <!-- emoji(V, S, C): V is value, S is shape, C is color -->
@@ -261,11 +273,11 @@
             <!-- display clues test -->
             <!-- shape of cell -->
             generate_single_hint([Clue_Type, Detail], Sentence) :- 
-            evaluate(Clue_Type, shape_of_cell) & evaluate(Detail, [Shape, R, C]) & evaluate(stringjoin(["The shape at row", R, "column", C, "is", Shape]), Sentence)
+            evaluate(Clue_Type, shape_of_cell) & evaluate(Detail, [Shape, R, C]) & shape_to_emoji(Shape, TS) & evaluate(stringjoin(["The shape at row", R, "column", C, "is", TS]), Sentence)
             
             <!-- emoji_of_cell -->
             generate_single_hint([Clue_Type, Detail], Sentence) :- 
-            evaluate(Clue_Type, emoji_of_cell) & evaluate(Detail, [Shape, R, C]) & translate(Shape, TShape) & evaluate(stringjoin([TShape, "is at row", R, "column", C]), Sentence)
+            evaluate(Clue_Type, emoji_of_cell) & evaluate(Detail, [Emoji, R, C]) & translate(Emoji, TEmoji) & evaluate(stringjoin([TEmoji, "is at row", R, "column", C]), Sentence)
 
             <!-- left_of -->
             generate_single_hint([Clue_Type, Detail], Sentence) :- 
@@ -277,7 +289,7 @@
             
             <!-- color_of_row -->
             generate_single_hint([Clue_Type, Detail], Sentence) :- 
-            evaluate(Clue_Type, color_of_row) & evaluate(Detail, [Color, R]) & evaluate(stringappend("The color of row ", R, " is ", Color), Sentence)  
+            evaluate(Clue_Type, color_of_row) & evaluate(Detail, [Color, R]) & color_translate(Color, TC) & evaluate(stringappend("The color of row ", R, " is ", TC), Sentence)  
             
             show_clue_section():: style(clue1, display, inline) & ~style(clue1, display, none) & style(clue2, display, inline) & ~style(clue2, display, none) & style(clue3, display, inline) & ~style(clue3, display, none) 
             & style(clue4, display, inline) & ~style(clue4, display, none) & style(clue5, display, inline) & ~style(clue5, display, none) & style(clue6, display, inline) & ~style(clue6, display, none)
