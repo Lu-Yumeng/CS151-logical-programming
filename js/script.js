@@ -31,3 +31,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+
+function modbuttonstart(button) {
+    // Automatically click the add_hint button
+    modbutton(button);
+    document.getElementById("add_hint").click();
+}
