@@ -176,3 +176,39 @@ button {
 #puzzle_grid {
     display: none;
 }
+.clue-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* space between the clues */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.clue {
+    background-color: rgba(173, 216, 230, 0.7); /* Baby blue with transparency */
+    color: black;
+    padding: 5px 15px 5px 15px; /* Reduced top padding */
+    text-align: center;
+    font-size: 14px; /* Reduced font size */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 80%; /* Reduced width */
+    max-width: 300px; /* Reduced maximum width */
+    display: none;
+}
+
+.clue:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.clues_heading {
+    text-align: center;
+    font-size: 24px; /* Adjust the size as needed */
+    font-style: italic;
+    margin-bottom: 20px;
+    display: none;
+}
+
