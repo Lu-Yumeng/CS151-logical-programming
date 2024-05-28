@@ -13,10 +13,10 @@ function getEmojiOptions() {
         { value: "red_heart", display: "❤️" },
         { value: "green_heart", display: "💚" },
         { value: "yellow_heart", display: "💛" },
-        { value: "blue_star", display: "📘"}, 
-        { value: "red_star", display: "📕"}, 
-        { value: "green_star", display: "📗"}, 
-        { value: "yellow_star", display: "📒" },
+        { value: "blue_book", display: "📘"}, 
+        { value: "red_book", display: "📕"}, 
+        { value: "green_book", display: "📗"}, 
+        { value: "yellow_book", display: "📒" },
     ];
 
     return emojis.map(emoji => `<option value="${emoji.value}">${emoji.display}</option>`).join('');
