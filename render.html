@@ -367,6 +367,8 @@
                         
             <!-- all style changes -->
             style(Clue, "background-color", "rgb(173, 161, 182)") :- satisfied_clue(H) & match_id(Clue, H)
+            style(Clue, "background-color", "rgba(173, 216, 230, 0.7)") :- match_id(Clue, H) & ~satisfied_clue(H)
+
             style(puzzle_grid, display, block) :- ~init_puzzle
             style(verify_button, display, inline-block) :- ~init_puzzle
             style(solution_button, display, inline-block) :- ~init_puzzle
@@ -426,12 +428,7 @@
             style(lose_message, display, block) :- verify_button_clicked_lose
             style(lose_message, display, none) :- verify_button_clicked_win
 
-            click(verify_button) :: ~init_puzzle & check() & ourclue(ClueSet) & valid(ClueSet) ==> verify_button_clicked_win & ~verify_button_clicked_lose
-            click(verify_button) :: ~init_puzzle & check() & ourclue(ClueSet) & valid(ClueSet) ==> verify_button_clicked_win & ~verify_button_clicked_lose
-
-            click(verify_button) :: ~init_puzzle & ~check() ==> verify_button_clicked_lose & ~verify_button_clicked_win
-            click(verify_button) :: ~init_puzzle & ~check() ==> verify_button_clicked_lose & ~verify_button_clicked_win
-            click(verify_button) :: ~init_puzzle & ourclue(ClueSet) & ~valid(ClueSet) ==> verify_button_clicked_lose & ~verify_button_clicked_win
+            click(verify_button) :: ~init_puzzle & ourclue(ClueSet) & valid(ClueSet) ==> verify_button_clicked_win & ~verify_button_clicked_lose
             click(verify_button) :: ~init_puzzle & ourclue(ClueSet) & ~valid(ClueSet) ==> verify_button_clicked_lose & ~verify_button_clicked_win
 
             check() :- ~init_puzzle & user_answer([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) & 
@@ -440,10 +437,10 @@
             <!-- For debug -->
             <!-- check() :- true -->
             valid(ClueSet) :- evaluate(length(ClueSet), 6) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6]) 
-            & satisfied_clue(H1)  & satisfied_clue(H2)  & satisfied_clue(H3)  & satisfied_clue(H4)  & satisfied_clue(H5)  & satisfied_clue(H6) 
+            & satisfied_clue(H1)  & satisfied_clue(H2)  & satisfied_clue(H3)  & satisfied_clue(H4)  & satisfied_clue(H5)  & satisfied_clue(H6) & check()
 
-            verify(ClueSet) :- evaluate(length(ClueSet), 7) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6, H7]) 
-            & satisfied_clue(H1)  & satisfied_clue(H2)  & satisfied_clue(H3)  & satisfied_clue(H4)  & satisfied_clue(H5)  & satisfied_clue(H6) & satisfied_clue(H7)
+            valid(ClueSet) :- evaluate(length(ClueSet), 7) & evaluate(ClueSet, [H1, H2, H3, H4, H5, H6, H7]) 
+            & satisfied_clue(H1)  & satisfied_clue(H2)  & satisfied_clue(H3)  & satisfied_clue(H4)  & satisfied_clue(H5)  & satisfied_clue(H6) & satisfied_clue(H7) & check()
 
             <!-- user answer -->
             user_answer([X11, X12, X13, X14, X21, X22, X23, X24, X31, X32, X33, X34, X41, X42, X43, X44]) :-
