@@ -67,7 +67,7 @@ button {
     color: white;
     border: none;
     border-radius: 5px;
-    margin: 2px 0; /* Add margin to separate the buttons */
+    margin: 10px 0; /* Add margin to separate the buttons */
 }
 .modal {
     display: none; /* Hidden by default */
@@ -90,7 +90,7 @@ button {
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    max-width: 600px;
+    max-width: 650px;
     border-radius: 10px;
 }
 
@@ -127,12 +127,14 @@ button {
     flex-direction: column;
     align-items: center;
     gap: 10px; /* space between the clues */
+    width: 80%; /* Adjust the width as needed */
     padding: 20px;
     border-radius: 10px;
 }
 
 .clue {
-    background-color: rgba(173, 216, 230, 0.7); /* Baby blue with transparency */
+    /* background-color: rgba(173, 216, 230, 0.7); Baby blue with transparency */
+    background-color: #f0f0f0; /* Light grey */
     color: black;
     padding: 5px 15px 5px 15px; /* Reduced top padding */
     text-align: center;
@@ -140,8 +142,8 @@ button {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s, box-shadow 0.2s;
-    width: 80%; /* Reduced width */
-    max-width: 300px; /* Reduced maximum width */
+    width: 100%; /* Reduced width */
+    max-width: 500px; /* Reduced maximum width */
     display: none;
 }
 
