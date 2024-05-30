@@ -159,4 +159,12 @@ button {
     margin-bottom: 20px;
     display: none;
 }
-
+.mode-font {
+    font-family: "Lucida Console", Monaco, monospace;
+}
+.rule-font{
+    font-family: Tahoma, Geneva, sans-serif;
+}
+.addhint-font{
+    font-family: Verdana, Geneva, sans-serif;
+}
