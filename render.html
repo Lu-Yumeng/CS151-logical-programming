@@ -261,8 +261,8 @@
 
             style(heading, display, inline) :- mode_chosen & ~init_puzzle
             style(start_button, display, inline) :- mode_chosen
-            <!-- randomly generate a valid grid -->
 
+            <!-- randomly generate a valid grid -->
             valid_row_color([C1, C2, C3, C4]) :-
                 color(C1) & color(C2) & color(C3) & color(C4) & mutex(C1, C2, C3, C4)
             
@@ -405,9 +405,9 @@
             truncate(E!L, R, E!List, N) :-
                 leq(1, N) & evaluate(minus(N, 1), N1) & truncate(L, R, List, N1)
 
-            <!-- get clue set (generate 25 clues and remove duplicates) --> 
+            <!-- get clue set (generate 18 clues and remove duplicates) --> 
             clue_set(ClueSet) :- 
-                generate_clues(25, Clues) & 
+                generate_clues(18, Clues) & 
                 remove_duplicates(Clues, ClueSet)
                         
             <!-- all style changes -->
