@@ -55,60 +55,6 @@ th, td {
     font-family: 'Courier New', Courier, monospace;
 }
 
-
-/* Common styles for custom shapes */
-.triangle, .star {
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    vertical-align: middle;
-}
-
-/* Triangle styles */
-.triangle {
-    width: 0;
-    height: 0;
-    border-left: 0.5em solid transparent;
-    border-right: 0.5em solid transparent;
-    border-bottom: 1em solid;
-}
-
-/* Star styles */
-.star {
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    background-color: currentColor;
-}
-
-/* Color styles */
-.blue {
-    border-bottom-color: blue;
-    color: blue;
-}
-
-.red {
-    border-bottom-color: red;
-    color: red;
-}
-
-.green {
-    border-bottom-color: green;
-    color: green;
-}
-
-.yellow {
-    border-bottom-color: yellow;
-    color: yellow;
-}
-
-.purple {
-    border-bottom-color: purple;
-    color: purple;
-}
-
-/* Resetting border-bottom for stars */
-.star.blue, .star.red, .star.green, .star.yellow, .star.purple {
-    border-bottom-color: transparent;
-}
 .ans_table {
     display: none;
     border-collapse: collapse;
@@ -121,7 +67,7 @@ button {
     color: white;
     border: none;
     border-radius: 5px;
-    margin: 2px 0; /* Add margin to separate the buttons */
+    margin: 10px 0; /* Add margin to separate the buttons */
 }
 .modal {
     display: none; /* Hidden by default */
@@ -144,7 +90,7 @@ button {
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    max-width: 600px;
+    max-width: 650px;
     border-radius: 10px;
 }
 
@@ -181,12 +127,14 @@ button {
     flex-direction: column;
     align-items: center;
     gap: 10px; /* space between the clues */
+    width: 80%; /* Adjust the width as needed */
     padding: 20px;
     border-radius: 10px;
 }
 
 .clue {
-    background-color: rgba(173, 216, 230, 0.7); /* Baby blue with transparency */
+    /* background-color: rgba(173, 216, 230, 0.7); Baby blue with transparency */
+    background-color: #f0f0f0; /* Light grey */
     color: black;
     padding: 5px 15px 5px 15px; /* Reduced top padding */
     text-align: center;
@@ -194,8 +142,8 @@ button {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s, box-shadow 0.2s;
-    width: 80%; /* Reduced width */
-    max-width: 300px; /* Reduced maximum width */
+    width: 100%; /* Reduced width */
+    max-width: 500px; /* Reduced maximum width */
     display: none;
 }
 
